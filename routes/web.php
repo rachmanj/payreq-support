@@ -29,6 +29,8 @@ Route::middleware('auth')->prefix('users')->name('users.')->group(function () {
 
 Route::middleware('auth')->prefix('roles')->name('roles.')->group(function () {
     Route::get('/', [RoleController::class, 'index'])->name('index');
+    Route::get('/create', [RoleController::class, 'create'])->name('create');
+    Route::post('/', [RoleController::class, 'store'])->name('store');
 });
 
 Route::prefix('permissions')->name('permissions.')->group(function () {
