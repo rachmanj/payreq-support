@@ -9,14 +9,14 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('roles.store') }}" method="POST">
-      @csrf
+    <form action="{{ route('roles.update', $role->id) }}" method="POST">
+      @csrf @method('PUT')
       <div class="row">
 
         <div class="col-6">
           <div class="card">
             <div class="card-header">
-              <div class="card-title">New Role</div>
+              <div class="card-title">Edit Role</div>
               <a href="{{ route('roles.index') }}" class="btn btn-sm btn-primary float-right"><i class="fas fa-undo"></i> Back</a>
             </div>
             <div class="card-body">
@@ -24,7 +24,7 @@
                 <div class="col-12">
                   <div class="form-group">
                     <label for="name">Role Name</label>
-                    <input type="text" name="name" class="form-control" autofocus>
+                    <input type="text" name="name" class="form-control" value="{{ old('name', $role->name) }}">
                   </div>
                 </div>
               </div>
@@ -32,7 +32,7 @@
                 <div class="col-12">
                   <div class="form-group">
                     <label for="guard_name">Guard Name</label>
-                    <input type="text" name="guard_name" class="form-control">
+                    <input type="text" name="guard_name" class="form-control" value="{{ old('guard_name', $role->guard_name) }}">
                   </div>
                 </div>
               </div>
@@ -54,7 +54,7 @@
                   <div class="form-group">
                     @foreach ($permissions as $permission)
                       <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="permission-{{ $permission->id }}" name="permission[]" value="{{ $permission->id }}">
+                        <input class="form-check-input" type="checkbox" id="permission-{{ $permission->id }}" name="permission[]" value="{{ $permission->id }}" {{ in_array($permission->id, $rolePermissions) ? 'checked="checked"' : '' }}>
                         <label class="form-check-label" for="permission-{{ $permission->id }}">{{ $permission->name }}</label>
                       </div>
                   @endforeach

@@ -1,11 +1,11 @@
 @extends('templates.main')
 
 @section('title_page')
-    Roles
+    Permissions
 @endsection
 
 @section('breadcrumb_title')
-    roles
+    permissions
 @endsection
 
 @section('content')
@@ -19,26 +19,25 @@
                 {{ Session::get('success') }}
               </div>
             @endif
-            <div class="card-title">Roles</div>
-            <a href="{{ route('roles.create') }}" class="btn btn-sm btn-primary float-right"> Create Role</a>
+            <div class="card-title">Permissions</div>
+            <a href="{{ route('permissions.create') }}" class="btn btn-sm btn-primary float-right"> Create Permission</a>
           </div>
           <div class="card-body">
             <table class="table table-bordered table-striped">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Roles Name</th>
+                  <th>Permission Name</th>
                   <th>Guard Name</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($roles as $role)
+                @foreach ($permissions as $permission)
                     <tr>
                       <td>{{ $loop->iteration }}</td>
-                      <td>{{ $role->name }}</td>
-                      <td>{{ $role->guard_name }}</td>
-                      <td><a href="{{ route('roles.edit', $role->id) }}"><i class="fas fa-edit"></i></a></td>
+                      <td>{{ $permission->name }}</td>
+                      <td>{{ $permission->guard_name }}</td>
                     </tr>
                 @endforeach
               </tbody>

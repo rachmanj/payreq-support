@@ -24,6 +24,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->prefix('users')->name('users.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('index');
     Route::get('/create', [UserController::class, 'create'])->name('create');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [UserController::class, 'update'])->name('update');
     Route::get('/data', [UserController::class, 'data'])->name('data');
 });
 
@@ -31,8 +33,12 @@ Route::middleware('auth')->prefix('roles')->name('roles.')->group(function () {
     Route::get('/', [RoleController::class, 'index'])->name('index');
     Route::get('/create', [RoleController::class, 'create'])->name('create');
     Route::post('/', [RoleController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [RoleController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [RoleController::class, 'update'])->name('update');
 });
 
 Route::prefix('permissions')->name('permissions.')->group(function () {
     Route::get('/', [PermissionController::class, 'index'])->name('index');
+    Route::get('/create', [PermissionController::class, 'create'])->name('create');
+    Route::post('/', [PermissionController::class, 'store'])->name('store');
 });

@@ -19,7 +19,9 @@
             {{ Session::get('status') }}
           </div>
         @endif
-        <a href="{{ route('users.create') }}" class="btn btn-sm btn-primary"> Create User</a>
+        @hasrole('admin')
+        <a href="#" class="btn btn-sm btn-primary"> Create User</a>
+        @endhasrole
       </div>
       <!-- /.card-header -->
       <div class="card-body">
