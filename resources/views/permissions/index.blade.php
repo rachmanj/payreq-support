@@ -20,7 +20,7 @@
               </div>
             @endif
             <div class="card-title">Permissions</div>
-            <a href="{{ route('permissions.create') }}" class="btn btn-sm btn-primary float-right"> Create Permission</a>
+            <button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#modal-input"><i class="fas fa-plus"></i> Permission</button>
           </div>
           <div class="card-body">
             <table class="table table-bordered table-striped">
@@ -29,7 +29,7 @@
                   <th>#</th>
                   <th>Permission Name</th>
                   <th>Guard Name</th>
-                  <th>Action</th>
+                  {{-- <th>Action</th> --}}
                 </tr>
               </thead>
               <tbody>
@@ -45,5 +45,37 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="modal fade" id="modal-input">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"> New Permission</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form action="{{ route('permissions.store') }}" method="POST">
+            @csrf
+          <div class="modal-body">
+              <div class="form-group">
+                <label for="name">Permission Name</label>
+                <input type="text" name='name' class="form-control" autofocus>
+              </div>          
+              <div class="form-group">
+                <label for="guard_name">Guard Name</label>
+                <input type="text" name='guard_name' class="form-control">
+              </div>
+          </div>
+          <div class="modal-footer float-left">
+            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"> Close</button>
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Save</button>
+          </div>
+        </form>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
     </div>
 @endsection

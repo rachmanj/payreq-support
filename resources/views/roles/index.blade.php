@@ -20,7 +20,7 @@
               </div>
             @endif
             <div class="card-title">Roles</div>
-            <a href="{{ route('roles.create') }}" class="btn btn-sm btn-primary float-right"> Create Role</a>
+            <a href="{{ route('roles.create') }}" class="btn btn-sm btn-primary float-right"><i class="fas fa-plus"></i> Role</a>
           </div>
           <div class="card-body">
             <table class="table table-bordered table-striped">
@@ -47,4 +47,5 @@
         </div>
       </div>
     </div>
+
 @endsection

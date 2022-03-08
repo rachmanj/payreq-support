@@ -5,7 +5,7 @@
 @endsection
 
 @section('breadcrumb_title')
-    user
+    users
 @endsection
 
 @section('content')
@@ -14,14 +14,17 @@
 
     <div class="card">
       <div class="card-header">
-        @if (Session::has('status'))
+        @if (Session::has('success'))
           <div class="alert alert-success">
-            {{ Session::get('status') }}
+            {{ Session::get('success') }}
           </div>
         @endif
-        @hasrole('admin')
-        <a href="#" class="btn btn-sm btn-primary"> Create User</a>
-        @endhasrole
+        @if (Session::has('error'))
+          <div class="alert alert-danger">
+            {{ Session::get('error') }}
+          </div>
+        @endif
+        <button href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-input"><i class="fas fa-plus"></i> User</button>
       </div>
       <!-- /.card-header -->
       <div class="card-body">
@@ -45,6 +48,78 @@
   <!-- /.col -->
 </div>
 <!-- /.row -->
+
+<div class="modal fade" id="modal-input">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"> New User</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="{{ route('users.store') }}" method="POST">
+        @csrf
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" class="form-control" autofocus>
+          </div>
+
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Project Code</label>
+            <select name="project_code" class="form-control">
+              <option value="">-- Select Project --</option>
+              @foreach ($projects as $project)
+                <option value="{{ $project }}">{{ $project }}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="employee_id">Payreq User</label>
+                <select name="employee_id" id="employee_id" class="form-control select2bs4">
+                  <option value="">-- select Payreq Use --</option>
+                  @foreach ($employee as $item)
+                      <option value="{{ $item->id }}">{{ $item->fullname }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name='password' class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="password_confirmation">Confirm Password</label>
+            <input type="password" name='password_confirmation' class="form-control">
+          </div>
+      </div>
+      <div class="modal-footer float-left">
+        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"> Close</button>
+        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Save</button>
+      </div>
+    </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+
 @endsection
 
 @section('styles')
@@ -53,6 +128,9 @@
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('adminlte/plugins/datatables/css/datatables.min.css') }}"/>
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endsection
 
 @section('scripts')
@@ -62,6 +140,8 @@
 <script src="{{ asset('adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/datatables/datatables.min.js') }}"></script>
+<!-- Select2 -->
+<script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 
 <script>
   $(function () {
@@ -80,5 +160,13 @@
       fixedHeader: true,
     })
   });
+</script>
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+  }) 
 </script>
 @endsection

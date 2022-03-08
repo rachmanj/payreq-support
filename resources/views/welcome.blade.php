@@ -8,9 +8,9 @@
         <h5 class="card-title">Welcome to</h5>
 
         <p class="card-text">
-          <h2><b>'Whaan</b> Technologies</h2>
+          <h2><b>PayReq</b> Support</h2>
           <hr>
-          <h5>Assets Expense Register</h5>
+          <h5>a Support Apps for PayReq System</h5>
         </p>
 
       </div>
