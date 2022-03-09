@@ -1,11 +1,11 @@
 @extends('templates.main')
 
 @section('title_page')
-    Users
+    Approved Payment Request
 @endsection
 
 @section('breadcrumb_title')
-    users
+    approved
 @endsection
 
 @section('content')
@@ -15,27 +15,31 @@
     <div class="card">
       <div class="card-header">
         @if (Session::has('success'))
-          <div class="alert alert-success">
+          <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             {{ Session::get('success') }}
           </div>
         @endif
         @if (Session::has('error'))
-          <div class="alert alert-danger">
+          <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             {{ Session::get('error') }}
           </div>
         @endif
-        <button href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-input"><i class="fas fa-plus"></i> User</button>
+        <button href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-input"><i class="fas fa-plus"></i> Payreq</button>
       </div>
       <!-- /.card-header -->
       <div class="card-body">
-        <table id="users_table" class="table table-bordered table-striped">
+        <table id="payreqs" class="table table-bordered table-striped">
           <thead>
           <tr>
-            <th>No</th>
+            <th>#</th>
             <th>Name</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Created at</th>
+            <th>Payreq No</th>
+            <th>Type</th>
+            <th>Apprv Date</th>
+            <th>IDR</th>
+            <th>Days</th>
             <th></th>
           </tr>
           </thead>
@@ -53,60 +57,82 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title"> New User</h4>
+        <h4 class="modal-title"> New PayReq</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="{{ route('users.store') }}" method="POST">
+      <form action="{{ route('approved.store') }}" method="POST">
         @csrf
       <div class="modal-body">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" name="name" class="form-control" autofocus>
-          </div>
 
           <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" name="username" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label>Project Code</label>
-            <select name="project_code" class="form-control">
-              <option value="">-- Select Project --</option>
-              @foreach ($projects as $project)
-                <option value="{{ $project }}">{{ $project }}</option>
+            <label for="employee_id">Employee Name</label>
+            <select name="employee_id" id="employee_id" class="form-control select2bs4 @error('employee_id') is-invalid @enderror">
+              <option value="">-- select employee name --</option>
+              @foreach ($employees as $employee)
+                  <option value="{{ $employee->id }}">{{ $employee->fullname }}</option>
               @endforeach
+            </select>
+            @error('employee_id')
+              <div class="invalid-feedback">
+                {{ $message }}
+              </div>
+            @enderror
+          </div>
+
+          <div class="form-group">
+            <label for="payreq_num">Payreq No</label>
+            <input type="text" name="payreq_num" class="form-control @error('payreq_num') is-invalid @enderror">
+            @error('payreq_num')
+              <div class="invalid-feedback">
+                {{ $message }}
+              </div>
+            @enderror
+          </div>
+
+          <div class="form-group">
+            <label for="payreq_type">Type</label>
+            <select name="payreq_type" id="payreq_type" class="form-control">
+              <option value="Advance">Advance</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
-          <div class="row">
-            <div class="col-12">
-              <div class="form-group">
-                <label for="employee_id">Payreq User</label>
-                <select name="employee_id" id="employee_id" class="form-control select2bs4">
-                  <option value="">-- select Payreq User --</option>
-                  @foreach ($employee as $item)
-                      <option value="{{ $item->id }}">{{ $item->fullname }}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
+          <div class="form-group">
+            <label for="que_group">Priority</label>
+            <select name="que_group" id="que_group" class="form-control">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
           </div>
 
           <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" name='password' class="form-control">
+            <label for="approve_date">Approved Date</label>
+            <input type="date" name="approve_date" class="form-control @error('approve_date') is-invalid @enderror">
+            @error('approve_date')
+              <div class="invalid-feedback">
+                {{ $message }}
+              </div>
+            @enderror
           </div>
+
           <div class="form-group">
-            <label for="password_confirmation">Confirm Password</label>
-            <input type="password" name='password_confirmation' class="form-control">
+            <label for="payreq_idr">Amount</label>
+            <input type="text" name="payreq_idr" id="payreq_idr" class="form-control @error('payreq_idr') is-invalid @enderror">
+            @error('payreq_idr')
+              <div class="invalid-feedback">
+                {{ $message }}
+              </div>
+            @enderror
           </div>
+
+          <div class="form-group">
+            <label for="remarks">Remarks</label>
+            <textarea name="remarks" id="remarks" cols="30" rows="2" class="form-control"></textarea>
+          </div>
+
       </div>
       <div class="modal-footer float-left">
         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"> Close</button>
@@ -118,8 +144,6 @@
   </div>
   <!-- /.modal-dialog -->
 </div>
-
-
 @endsection
 
 @section('styles')
@@ -145,19 +169,27 @@
 
 <script>
   $(function () {
-    $("#users_table").DataTable({
+    $("#payreqs").DataTable({
       processing: true,
       serverSide: true,
-      ajax: '{{ route('users.data') }}',
+      ajax: '{{ route('approved.data') }}',
       columns: [
         {data: 'DT_RowIndex', orderable: false, searchable: false},
-        {data: 'name'},
-        {data: 'username'},
-        {data: 'email'},
-        {data: 'created_at'},
+        {data: 'employee'},
+        {data: 'payreq_num'},
+        {data: 'payreq_type'},
+        {data: 'approve_date'},
+        {data: 'payreq_idr'},
+        {data: 'days'},
         {data: 'action', orderable: false, searchable: false},
       ],
       fixedHeader: true,
+      columnDefs: [
+              {
+                "targets": [5, 6],
+                "className": "text-right"
+              }
+            ]
     })
   });
 </script>

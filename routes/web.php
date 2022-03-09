@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PayreqApprovedController;
+use App\Http\Controllers\PayreqOutgoingController;
+use App\Http\Controllers\PayreqRealizationController;
+use App\Http\Controllers\PayreqVerifyController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RoleController;
@@ -44,4 +48,30 @@ Route::prefix('permissions')->name('permissions.')->group(function () {
 Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [UserDashboardController::class, 'index'])->name('index');
     Route::get('/{id}', [UserDashboardController::class, 'show'])->name('show');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('approved/data', [PayreqApprovedController::class, 'data'])->name('approved.data');
+    Route::resource('approved', PayreqApprovedController::class);
+});
+
+Route::middleware('auth')->prefix('realization')->name('realization.')->group(function () {
+    Route::get('/data', [PayreqRealizationController::class, 'data'])->name('data');
+    Route::get('/', [PayreqRealizationController::class, 'index'])->name('index');
+    Route::get('/{id}/edit', [PayreqRealizationController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [PayreqRealizationController::class, 'update'])->name('update');
+});
+
+Route::middleware('auth')->prefix('outgoing')->name('outgoing.')->group(function () {
+    Route::get('/data', [PayreqOutgoingController::class, 'data'])->name('data');
+    Route::get('/', [PayreqOutgoingController::class, 'index'])->name('index');
+    Route::get('/{id}/edit', [PayreqOutgoingController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [PayreqOutgoingController::class, 'update'])->name('update');
+});
+
+Route::middleware('auth')->prefix('verify')->name('verify.')->group(function () {
+    Route::get('/data', [PayreqVerifyController::class, 'data'])->name('data');
+    Route::get('/', [PayreqVerifyController::class, 'index'])->name('index');
+    Route::get('/{id}/edit', [PayreqVerifyController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [PayreqVerifyController::class, 'update'])->name('update');
 });

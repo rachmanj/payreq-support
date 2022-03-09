@@ -18,18 +18,18 @@
         </li>
         @hasanyrole('superadmin|admin_accounting')
         <li class="nav-item">
-          <a href="#" class="nav-link">Approved</a>
+          <a href="{{ route('approved.index') }}" class="nav-link">Approved</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link">Realization</a>
+          <a href="{{ route('realization.index') }}" class="nav-link">Realization</a>
         </li>
         @endhasanyrole
         @hasanyrole('superadmin|admin_accounting|cashier')
         <li class="nav-item">
-          <a href="#" class="nav-link">Outgoing</a>
+          <a href="{{ route('outgoing.index') }}" class="nav-link">Outgoing</a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link">Verification</a>
+          <a href="{{ route('verify.index') }}" class="nav-link">Verification</a>
         </li>
         @endhasanyrole
         @hasanyrole('superadmin')

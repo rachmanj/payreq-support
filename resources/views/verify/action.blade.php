@@ -1,0 +1,1 @@
+<a href="{{ route('verify.edit', $model->id) }}" class="btn btn-xs btn-warning">update</a>
