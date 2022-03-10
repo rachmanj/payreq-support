@@ -8,6 +8,7 @@ use App\Http\Controllers\PayreqRealizationController;
 use App\Http\Controllers\PayreqVerifyController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDashboardController;
@@ -74,4 +75,13 @@ Route::middleware('auth')->prefix('verify')->name('verify.')->group(function () 
     Route::get('/', [PayreqVerifyController::class, 'index'])->name('index');
     Route::get('/{id}/edit', [PayreqVerifyController::class, 'edit'])->name('edit');
     Route::put('/{id}', [PayreqVerifyController::class, 'update'])->name('update');
+});
+
+Route::middleware('auth')->prefix('reports')->name('reports.')->group(function () {
+    Route::get('/', [ReportController::class, 'index'])->name('index');
+    Route::get('/report1', [ReportController::class, 'report1_index'])->name('report1.index');
+    Route::get('/report1/{id}/edit', [ReportController::class, 'report1_edit'])->name('report1.edit');
+    Route::put('/report1/{id}', [ReportController::class, 'report1_update'])->name('report1.update');
+    Route::delete('/report1/{id}', [ReportController::class, 'report1_destroy'])->name('report1.destroy');
+    Route::post('/report1/display', [ReportController::class, 'report1_display'])->name('report1.display');
 });
