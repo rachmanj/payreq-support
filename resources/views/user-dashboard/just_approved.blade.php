@@ -1,6 +1,6 @@
 <div class="card card-info">
   <div class="card-header border-transaparent">
-    <h3 class="card-title">Belum Outgoing</h3>
+    <h3 class="card-title">Payreq Belum Outgoing</h3>
   </div>
   <div class="card-body p-0">
     <div class="table-responsive">
