@@ -59,21 +59,18 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->prefix('realization')->name('realization.')->group(function () {
     Route::get('/data', [PayreqRealizationController::class, 'data'])->name('data');
     Route::get('/', [PayreqRealizationController::class, 'index'])->name('index');
-    Route::get('/{id}/edit', [PayreqRealizationController::class, 'edit'])->name('edit');
     Route::put('/{id}', [PayreqRealizationController::class, 'update'])->name('update');
 });
 
 Route::middleware('auth')->prefix('outgoing')->name('outgoing.')->group(function () {
     Route::get('/data', [PayreqOutgoingController::class, 'data'])->name('data');
     Route::get('/', [PayreqOutgoingController::class, 'index'])->name('index');
-    Route::get('/{id}/edit', [PayreqOutgoingController::class, 'edit'])->name('edit');
     Route::put('/{id}', [PayreqOutgoingController::class, 'update'])->name('update');
 });
 
 Route::middleware('auth')->prefix('verify')->name('verify.')->group(function () {
     Route::get('/data', [PayreqVerifyController::class, 'data'])->name('data');
     Route::get('/', [PayreqVerifyController::class, 'index'])->name('index');
-    Route::get('/{id}/edit', [PayreqVerifyController::class, 'edit'])->name('edit');
     Route::put('/{id}', [PayreqVerifyController::class, 'update'])->name('update');
 });
 

@@ -12,32 +12,19 @@ class PayreqOutgoingController extends Controller
         return view('outgoing.index');
     }
 
-    public function edit($id)
-    {
-        $payreq = Payreq::findOrFail($id);
-
-        return view('outgoing.edit', compact('payreq'));
-    }
-
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'outgoing_date' => 'required',
-        ]);
+        if($request->outgoing_date) {
+            $outgoing_date = $request->outgoing_date;
+        } else {
+            $outgoing_date = date('Y-m-d');
+        }
 
         $payreq = Payreq::findOrFail($id);
-        $payreq->outgoing_date = $request->outgoing_date;
+        $payreq->outgoing_date = $outgoing_date;
         $payreq->save();
 
         return redirect()->route('outgoing.index')->with('success', 'Payment Request updated');
-    }
-
-    public function destroy($id)
-    {
-        $payreq = Payreq::findOrFail($id);
-        $payreq->delete();
-
-        return redirect()->route('approved.index')->with('success', 'Payment Request deleted');
     }
 
     public function data()

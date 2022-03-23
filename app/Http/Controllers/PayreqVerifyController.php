@@ -12,21 +12,16 @@ class PayreqVerifyController extends Controller
         return view('verify.index');
     }
 
-    public function edit($id)
-    {
-        $payreq = Payreq::findOrFail($id);
-
-        return view('verify.edit', compact('payreq'));
-    }
-
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'verify_date' => 'required',
-        ]);
+        if($request->verify_date) {
+            $verify_date = $request->verify_date;
+        } else {
+            $verify_date = date('Y-m-d');
+        }
 
         $payreq = Payreq::findOrFail($id);
-        $payreq->verify_date = $request->verify_date;
+        $payreq->verify_date = $verify_date;
         $payreq->save();
 
         return redirect()->route('verify.index')->with('success', 'Payment Request updated');

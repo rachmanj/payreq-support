@@ -20,14 +20,19 @@ class PayreqApprovedController extends Controller
         $this->validate($request, [
             'employee_id' => 'required',
             'payreq_num' => 'required|unique:tbl_payreq',
-            'approve_date' => 'required',
             'payreq_idr' => 'required',
         ]);
+
+        if($request->approve_date) {
+            $approve_date = $request->approve_date;
+        } else {
+            $approve_date = date('Y-m-d');
+        }
 
         $payreq = new Payreq();
         $payreq->employee_id = $request->employee_id;
         $payreq->payreq_num = $request->payreq_num;
-        $payreq->approve_date = $request->approve_date;
+        $payreq->approve_date = $approve_date;
         $payreq->payreq_type = $request->payreq_type;
         $payreq->que_group = $request->que_group;
         $payreq->payreq_idr = $request->payreq_idr;
@@ -81,7 +86,7 @@ class PayreqApprovedController extends Controller
         $payreqs = Payreq::select('id', 'payreq_num', 'employee_id', 'approve_date', 'payreq_type', 'payreq_idr', 'outgoing_date')
                     ->selectRaw('datediff(now(), approve_date) as days')
                     ->whereNull('outgoing_date')
-                    ->orderBy('approve_date', 'asc')
+                    ->orderBy('approve_date', 'desc')
                     ->get();
 
         return datatables()->of($payreqs)
