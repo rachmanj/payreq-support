@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\Payreq;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 
 class PayreqVerifyController extends Controller
@@ -21,6 +23,40 @@ class PayreqVerifyController extends Controller
         }
 
         $payreq = Payreq::findOrFail($id);
+        
+        //cek apakah payreq_idr berbeda dengan realization_amount
+        if($payreq->payreq_idr > $payreq->realization_amount) {
+            $variant = $payreq->payreq_idr - $payreq->realization_amount;
+            if($payreq->buc_id) {
+                $account = Account::where('account_no', '111115')->first();
+                $account->balance = $account->balance + $variant;
+            } else {
+                $account = Account::where('account_no', '111111')->first();
+                $account->balance = $account->balance + $variant;
+            }
+        } else if ($payreq->payreq_idr < $payreq->realization_amount) {
+            $variant = $payreq->realization_amount - $payreq->payreq_idr;
+            if($payreq->buc_id) {
+                $account = Account::where('account_no', '111115')->first();
+                $description = 'PR ' . $payreq->payreq_num .', RAB no' . $payreq->buc->rab_no;
+
+            } else {
+                $account = Account::where('account_no', '111111')->first();
+                $description = 'PR ' . $payreq->payreq_num;        
+            }
+            $account->balance = $account->balance - $variant;
+            // create transaksi
+            $transaksi = new Transaksi();
+            $transaksi->payreq_id = $payreq->id;
+            $transaksi->account_id = $account->id;
+            $transaksi->description = $description;
+            $transaksi->type = 'plus';
+            $transaksi->amount = $variant;
+            $transaksi->save();
+        }
+
+        $account->save();
+
         $payreq->verify_date = $verify_date;
         $payreq->save();
 
@@ -37,6 +73,7 @@ class PayreqVerifyController extends Controller
                         'payreq_idr', 
                         'outgoing_date',
                         'realization_num',
+                        'realization_amount',
                         'realization_date',
                     )
                     ->selectRaw('datediff(now(), realization_date) as days')
@@ -57,6 +94,14 @@ class PayreqVerifyController extends Controller
                 })
                 ->editColumn('payreq_idr', function ($payreq) {
                     return number_format($payreq->payreq_idr, 0);
+                })
+                ->editColumn('realization_amount', function ($payreq) {
+                    if($payreq->realization_amount) {
+                        return number_format($payreq->realization_amount, 0);
+                    } else {
+                        return number_format($payreq->payreq_idr, 0);
+                    }
+                    return number_format($payreq->realization_amount, 0);
                 })
                 ->addColumn('employee', function ($payreq) {
                     return $payreq->employee->fullname;

@@ -26,14 +26,22 @@ class PayreqRealizationController extends Controller
             'realization_num' => 'required|unique:tbl_payreq',
         ]);
 
+        $payreq = Payreq::findOrFail($id);
+
+        if($request->realization_amount){
+            $realization_amount = $request->realization_amount;
+        } else {
+            $realization_amount = $payreq->payment_idr;
+        }
+
         if ($request->realization_date) {
             $realization_date = $request->realization_date;
         } else {
             $realization_date = date('Y-m-d');
         }
 
-        $payreq = Payreq::findOrFail($id);
         $payreq->realization_num = $request->realization_num;
+        $payreq->realization_amount = $realization_amount;
         $payreq->realization_date = $realization_date;
         $payreq->save();
 
@@ -49,7 +57,8 @@ class PayreqRealizationController extends Controller
                         'approve_date', 
                         'payreq_type', 
                         'payreq_idr', 
-                        'outgoing_date'
+                        'outgoing_date',
+                        'buc_id',
                     )
                     ->selectRaw('datediff(now(), outgoing_date) as days')
                     ->where('payreq_type', 'Advance')
@@ -59,6 +68,12 @@ class PayreqRealizationController extends Controller
                     ->get();
 
         return datatables()->of($payreqs)
+                ->editColumn('payreq_num', function($payreq) {
+                    if($payreq->buc_id) {
+                        return $payreq->payreq_num . ' ' . '<i class="fas fa-check"></i>';
+                    }
+                    return $payreq->payreq_num;
+                })
                 ->editColumn('approve_date', function ($payreq) {
                     return date('d-m-Y', strtotime($payreq->approve_date));
                 })
@@ -73,7 +88,7 @@ class PayreqRealizationController extends Controller
                 })
                 ->addIndexColumn()
                 ->addColumn('action', 'realization.action')
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'payreq_num'])
                 ->toJson();
     }
 }

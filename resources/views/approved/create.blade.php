@@ -10,25 +10,25 @@
 
 @section('content')
     <div class="row">
-      <div class="col-8">
+      <div class="col-10">
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Edit Data</h3>
+            <h3 class="card-title">New Payment Request</h3>
             <a href="{{ route('approved.index') }}" class="btn btn-sm btn-primary float-right"><i class="fas fa-undo"></i> Back</a>
           </div>
           <div class="card-body">
-            <form action="{{ route('approved.update', $payreq->id) }}" method="POST" id="form-edit-payreq">
-              @csrf @method('PUT')
+            <form action="{{ route('approved.store') }}" method="POST">
+              @csrf
 
               <div class="row">
-                <div class="col-12">
+                <div class="col-6">
                   <div class="form-group">
                     <label for="employee_id">Employee Name</label>
                     <select name="employee_id" id="employee_id" class="form-control select2bs4 @error('employee_id') is-invalid @enderror">
                       <option value="">-- select employee name --</option>
                       @foreach ($employees as $employee)
-                          <option value="{{ $employee->id }}" {{ $payreq->employee_id === $employee->id ? 'selected' : '' }}>{{ $employee->fullname }}</option>
+                          <option value="{{ $employee->id }}" {{ old('employee_id') === $employee->id ? 'selected' : '' }}>{{ $employee->fullname }}</option>
                       @endforeach
                     </select>
                     @error('employee_id')
@@ -38,13 +38,10 @@
                     @enderror
                   </div>
                 </div>
-              </div>
-
-              <div class="row">
                 <div class="col-6">
                   <div class="form-group">
                     <label for="payreq_num">Payreq No</label>
-                    <input type="text" name="payreq_num" value="{{ old('payreq_num', $payreq->payreq_num) }}" class="form-control @error('payreq_num') is-invalid @enderror">
+                    <input type="text" name="payreq_num" value="{{ old('payreq_num') }}" class="form-control @error('payreq_num') is-invalid @enderror" autocomplete="off">
                     @error('payreq_num')
                       <div class="invalid-feedback">
                         {{ $message }}
@@ -52,10 +49,13 @@
                       @enderror
                   </div>
                 </div>
-                <div class="col-6">
+              </div>
+  
+              <div class="row">
+                <div class="col-4">
                   <div class="form-group">
                     <label for="approve_date">Approved Date</label>
-                    <input type="date" name="approve_date" value="{{ old('approve_date', $payreq->approve_date) }}" class="form-control @error('approve_date') is-invalid @enderror">
+                    <input type="date" name="approve_date" value="{{ old('approve_date') }}" class="form-control @error('approve_date') is-invalid @enderror">
                     @error('approve_date')
                     <div class="invalid-feedback">
                       {{ $message }}
@@ -63,35 +63,32 @@
                     @enderror
                   </div>
                 </div>
-              </div>
-    
-              <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                   <div class="form-group">
                     <label for="payreq_type">Type</label>
                     <select name="payreq_type" id="payreq_type" class="form-control">
-                      <option value="Advance" {{ $payreq->payreq_type === 'Advance' ? 'selected' : '' }}>Advance</option>
-                      <option value="Other" {{ $payreq->payreq_type === 'Other' ? 'selected' : '' }}>Other</option>
+                      <option value="Advance" {{ old('payreq_type') === 'Advance' ? 'selected' : '' }}>Advance</option>
+                      <option value="Other" {{ old('payreq_type') === 'Other' ? 'selected' : '' }}>Other</option>
                     </select>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                   <div class="form-group">
                     <label for="que_group">Priority</label>
                     <select name="que_group" id="que_group" class="form-control">
-                      <option value="1" {{ $payreq->que_group === '1' ? 'selected' : '' }}>1</option>
-                      <option value="2" {{ $payreq->que_group === '2' ? 'selected' : '' }}>2</option>
-                      <option value="3" {{ $payreq->que_group === '3' ? 'selected' : '' }}>3</option>
+                      <option value="1" {{ old('que_group') === '1' ? 'selected' : '' }}>1</option>
+                      <option value="2" {{ old('que_group') === '2' ? 'selected' : '' }}>2</option>
+                      <option value="3" {{ old('que_group') === '3' ? 'selected' : '' }}>3</option>
                     </select>
                   </div>
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="col-6">
                   <div class="form-group">
                     <label for="payreq_idr">Amount</label>
-                    <input type="text" name="payreq_idr" id="payreq_idr" value="{{ old('payreq_idr', $payreq->payreq_idr) }}" class="form-control @error('payreq_idr') is-invalid @enderror">
+                    <input type="text" name="payreq_idr" id="payreq_idr" value="{{ old('payreq_idr') }}" class="form-control @error('payreq_idr') is-invalid @enderror">
                     @error('payreq_idr')
                     <div class="invalid-feedback">
                       {{ $message }}
@@ -101,11 +98,20 @@
                 </div>
                 <div class="col-6">
                   <div class="form-group">
-                    <label for="buc_id">BUC RAB No</label><small> Optional</small>
+                    <label for="remarks">Remarks</label>
+                    <textarea name="remarks" id="remarks" cols="30" rows="1" class="form-control">{{ old('remarks') }}</textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label for="buc_id">BUC RAB No</label><small> (Pilih RAB No jika merupakan payreq utk RAB BUC)</small>
                     <select name="buc_id" id="buc_id" class="form-control select2bs4 @error('buc_id') is-invalid @enderror">
                       <option value="">-- select RAB No --</option>
                       @foreach ($bucs as $buc)
-                          <option value="{{ $buc->id }}" {{ $payreq->buc_id == $buc->id ? 'selected' : '' }}>{{ $buc->rab_no }}</option>
+                          <option value="{{ $buc->id }}">{{ $buc->rab_no }}</option>
                       @endforeach
                     </select>
                     @error('buc_id')
@@ -115,20 +121,17 @@
                     @enderror
                   </div>
                 </div>
+                <div class="col-6">
+                  {{--  --}}
                 </div>
-              
-              <div class="form-group">
-                <label for="remarks">Remarks</label>
-                <textarea name="remarks" id="remarks" cols="30" rows="2" class="form-control">{{ old('remarks', $payreq->remarks) }}</textarea>
               </div>
-            
-            </form>
-            </div> {{--card body --}}
-            <div class="card-footer">
-              <button type="submit" class="btn btn-primary btn-sm" form="form-edit-payreq"><i class="fas fa-save"></i> Save</button>
-            </div>
-          </div>
 
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Save</button>
+              </div>
+            </form>
+
+          </div>
         </div>
       </div>
     </div>
@@ -143,7 +146,6 @@
 @section('scripts')
 <!-- Select2 -->
 <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
-
 <script>
   $(function () {
     //Initialize Select2 Elements

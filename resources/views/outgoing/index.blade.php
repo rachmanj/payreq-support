@@ -39,7 +39,7 @@
             <th>Apprv Date</th>
             <th>IDR</th>
             <th>Days</th>
-            <th></th>
+            <th>release</th>
           </tr>
           </thead>
         </table>

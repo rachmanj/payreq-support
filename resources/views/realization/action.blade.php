@@ -18,6 +18,10 @@
             <input type="text" name="realization_num" class="form-control">
           </div>
           <div class="form-group">
+            <label for="realization_amount">Amount</label>
+            <input type="text" name="realization_amount" class="form-control">
+          </div>
+          <div class="form-group">
             <label for="realization_date">Payment Date</label>
             <input type="date" name="realization_date" class="form-control">
           </div>

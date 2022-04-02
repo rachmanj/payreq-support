@@ -16,15 +16,21 @@
         <li class="nav-item">
           <a href="{{ route('dashboard.index') }}" class="nav-link">Dashboard</a>
         </li>
-      </li>
-        @hasanyrole('superadmin|dnc_officer')
+        @hasanyrole('superadmin|admin_accounting')
         <li class="nav-item">
-          <a href="{{ route('bucs.index') }}" class="nav-link">BUCs</a>
+          <a href="{{ route('approved.index') }}" class="nav-link">Approved</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('realization.index') }}" class="nav-link">Realization</a>
         </li>
         @endhasanyrole
         @hasanyrole('superadmin|admin_accounting|cashier')
-        @include('templates.partials.menu.payreq')
-        @include('templates.partials.menu.accounting')
+        <li class="nav-item">
+          <a href="{{ route('outgoing.index') }}" class="nav-link">Outgoing</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('verify.index') }}" class="nav-link">Verification</a>
+        </li>
         @endhasanyrole
         @hasanyrole('superadmin')
         @include('templates.partials.menu.admin')

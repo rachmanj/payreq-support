@@ -39,6 +39,7 @@
             <th>Realz No</th>
             <th>Realz Date</th>
             <th>IDR</th>
+            <th>Realize</th>
             <th>Days</th>
             <th></th>
           </tr>
@@ -84,14 +85,19 @@
         {data: 'realization_num'},
         {data: 'realization_date'},
         {data: 'payreq_idr'},
+        {data: 'realization_amount'},
         {data: 'days'},
         {data: 'action', orderable: false, searchable: false},
       ],
       fixedHeader: true,
       columnDefs: [
               {
-                "targets": [5, 6],
+                "targets": [6, 7, 8],
                 "className": "text-right"
+              },
+              {
+                "targets": [2, 3, 4, 5],
+                "className": "text-center"
               }
             ]
     })

@@ -37,7 +37,7 @@
             <th>Payreq No</th>
             <th>Apprv Date</th>
             <th>Outgoing Date</th>
-            <th>IDR</th>
+            <th>IDR</th>\
             <th>Days</th>
             <th></th>
           </tr>

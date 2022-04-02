@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Buc;
 use App\Models\Employee;
 use App\Models\Payreq;
 use Illuminate\Http\Request;
@@ -10,9 +11,15 @@ class PayreqApprovedController extends Controller
 {
     public function index()
     {
-        $employees = Employee::orderBy('fullname', 'asc')->get();
+        return view('approved.index');
+    }
 
-        return view('approved.index', compact('employees'));
+    public function create()
+    {
+        $employees = Employee::orderBy('fullname', 'asc')->get();
+        $bucs = Buc::where('status', 'progress')->orderBy('rab_no', 'asc')->get();
+
+        return view('approved.create', compact('employees', 'bucs'));
     }
 
     public function store(Request $request)
@@ -36,6 +43,7 @@ class PayreqApprovedController extends Controller
         $payreq->payreq_type = $request->payreq_type;
         $payreq->que_group = $request->que_group;
         $payreq->payreq_idr = $request->payreq_idr;
+        $request->buc_id ? $payreq->buc_id = $request->buc_id : $payreq->buc_id = null;
         $payreq->remarks = $request->remarks;
         $payreq->save();
 
@@ -46,8 +54,9 @@ class PayreqApprovedController extends Controller
     {
         $payreq = Payreq::findOrFail($id);
         $employees = Employee::orderBy('fullname', 'asc')->get();
+        $bucs = Buc::where('status', 'progress')->orderBy('rab_no', 'asc')->get();
 
-        return view('approved.edit', compact('payreq', 'employees'));
+        return view('approved.edit', compact('payreq', 'employees', 'bucs'));
     }
 
     public function update(Request $request, $id)
@@ -68,6 +77,7 @@ class PayreqApprovedController extends Controller
         $payreq->que_group = $request->que_group;
         $payreq->payreq_idr = $request->payreq_idr;
         $payreq->remarks = $request->remarks;
+        $request->buc_id ? $payreq->buc_id = $request->buc_id : $payreq->buc_id = null;
         $payreq->save();
 
         return redirect()->route('approved.index')->with('success', 'Payment Request updated');
@@ -83,13 +93,19 @@ class PayreqApprovedController extends Controller
 
     public function data()
     {
-        $payreqs = Payreq::select('id', 'payreq_num', 'employee_id', 'approve_date', 'payreq_type', 'payreq_idr', 'outgoing_date')
+        $payreqs = Payreq::select('id', 'payreq_num', 'employee_id', 'approve_date', 'payreq_type', 'payreq_idr', 'outgoing_date', 'buc_id')
                     ->selectRaw('datediff(now(), approve_date) as days')
                     ->whereNull('outgoing_date')
                     ->orderBy('approve_date', 'desc')
                     ->get();
 
         return datatables()->of($payreqs)
+                ->editColumn('payreq_num', function($payreq) {
+                    if($payreq->buc_id) {
+                        return $payreq->payreq_num . ' ' . '<i class="fas fa-check"></i>';
+                    }
+                    return $payreq->payreq_num;
+                })
                 ->editColumn('approve_date', function ($payreq) {
                     return date('d-m-Y', strtotime($payreq->approve_date));
                 })
@@ -101,7 +117,7 @@ class PayreqApprovedController extends Controller
                 })
                 ->addIndexColumn()
                 ->addColumn('action', 'approved.action')
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'payreq_num'])
                 ->toJson();
     }
 }
