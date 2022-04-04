@@ -29,22 +29,14 @@ class PayreqVerifyController extends Controller
             $variant = $payreq->payreq_idr - $payreq->realization_amount;
             if($payreq->buc_id) {
                 $account = Account::where('account_no', '111115')->first();
-                $account->balance = $account->balance + $variant;
+                $description = 'Kelebihan PR ' . $payreq->payreq_num .', RAB no' . $payreq->buc->rab_no;
             } else {
                 $account = Account::where('account_no', '111111')->first();
-                $account->balance = $account->balance + $variant;
+                $description = 'Kelebihan PR ' . $payreq->payreq_num;
             }
-        } else if ($payreq->payreq_idr < $payreq->realization_amount) {
-            $variant = $payreq->realization_amount - $payreq->payreq_idr;
-            if($payreq->buc_id) {
-                $account = Account::where('account_no', '111115')->first();
-                $description = 'PR ' . $payreq->payreq_num .', RAB no' . $payreq->buc->rab_no;
+            $account->balance = $account->balance + $variant;
+            $account->save();
 
-            } else {
-                $account = Account::where('account_no', '111111')->first();
-                $description = 'PR ' . $payreq->payreq_num;        
-            }
-            $account->balance = $account->balance - $variant;
             // create transaksi
             $transaksi = new Transaksi();
             $transaksi->payreq_id = $payreq->id;
@@ -53,9 +45,28 @@ class PayreqVerifyController extends Controller
             $transaksi->type = 'plus';
             $transaksi->amount = $variant;
             $transaksi->save();
-        }
 
-        $account->save();
+        } else if ($payreq->payreq_idr < $payreq->realization_amount) {
+            $variant = $payreq->realization_amount - $payreq->payreq_idr;
+            if($payreq->buc_id) {
+                $account = Account::where('account_no', '111115')->first();
+                $description = 'Kekurangan PR ' . $payreq->payreq_num .', RAB no' . $payreq->buc->rab_no;
+
+            } else {
+                $account = Account::where('account_no', '111111')->first();
+                $description = 'Kekurangan PR ' . $payreq->payreq_num;        
+            }
+            $account->balance = $account->balance - $variant;
+            $account->save();
+            // create transaksi
+            $transaksi = new Transaksi();
+            $transaksi->payreq_id = $payreq->id;
+            $transaksi->account_id = $account->id;
+            $transaksi->description = $description;
+            $transaksi->type = 'plus';
+            $transaksi->amount = $variant;
+            $transaksi->save();
+        } 
 
         $payreq->verify_date = $verify_date;
         $payreq->save();

@@ -22,7 +22,7 @@
             <input type="text" name="realization_amount" class="form-control">
           </div>
           <div class="form-group">
-            <label for="realization_date">Payment Date</label>
+            <label for="realization_date">Realization Date</label>
             <input type="date" name="realization_date" class="form-control">
           </div>
         </div>
