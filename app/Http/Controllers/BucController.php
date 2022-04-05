@@ -128,11 +128,18 @@ class BucController extends Controller
             ->editColumn('employee', function ($payreq) {
                 return $payreq->employee->fullname;
             })
-            ->editColumn('payreq_idr', function ($payreq) {
-                return number_format($payreq->payreq_idr, 2);
-            })
-            ->editColumn('realization_amount', function ($payreq) {
-                return number_format($payreq->realization_amount, 2);
+            // ->editColumn('payreq_idr', function ($payreq) {
+            //     return number_format($payreq->payreq_idr, 2);
+            // })
+            // ->editColumn('realization_amount', function ($payreq) {
+            //     return number_format($payreq->realization_amount, 2);
+            // })
+            ->editColumn('amount', function ($payreq) {
+                if($payreq->realization_amount){
+                    return number_format($payreq->realization_amount, 2);
+                } else {
+                    return number_format($payreq->payreq_idr, 2);
+                }
             })
             ->addIndexColumn()
             ->toJson();

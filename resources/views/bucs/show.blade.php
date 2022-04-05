@@ -40,8 +40,8 @@
                   <th>Payreq No</th>
                   <th>Date</th>
                   <th>Requestor</th>
-                  <th>Advance</th>
-                  <th>Realization</th>
+                  <th>Remarks</th>
+                  <th>Amount</th>
                 </tr>
               </thead>
             </table>
@@ -78,13 +78,13 @@
         {data: 'payreq_num'},
         {data: 'approve_date'},
         {data: 'employee'},
-        {data: 'payreq_idr'},
-        {data: 'realization_amount'},
+        {data: 'remarks'},
+        {data: 'amount'},
       ],
       fixedHeader: true,
       columnDefs: [
               {
-                "targets": [4, 5],
+                "targets": [5],
                 "className": "text-right"
               }
             ]
