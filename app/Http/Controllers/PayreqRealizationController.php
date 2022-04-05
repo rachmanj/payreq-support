@@ -21,18 +21,11 @@ class PayreqRealizationController extends Controller
 
     public function update(Request $request, $id)
     {
-        
         $this->validate($request, [
             'realization_num' => 'required|unique:tbl_payreq',
         ]);
 
         $payreq = Payreq::findOrFail($id);
-
-        if($request->realization_amount){
-            $realization_amount = $request->realization_amount;
-        } else {
-            $realization_amount = $payreq->payment_idr;
-        }
 
         if ($request->realization_date) {
             $realization_date = $request->realization_date;
@@ -41,7 +34,7 @@ class PayreqRealizationController extends Controller
         }
 
         $payreq->realization_num = $request->realization_num;
-        $payreq->realization_amount = $realization_amount;
+        $payreq->realization_amount = $request->realization_amount;
         $payreq->realization_date = $realization_date;
         $payreq->save();
 

@@ -10,7 +10,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="{{ route('realization.update', $model->id) }}" method="POST">
+      <form action="{{ route('realization.update', $model->id) }}" method="POST" id="form-{{ $model->id }}">
         @csrf @method('PUT')
         <div class="modal-body">
           <div class="form-group">
@@ -18,8 +18,8 @@
             <input type="text" name="realization_num" class="form-control">
           </div>
           <div class="form-group">
-            <label for="realization_amount">Amount <small>(kosong => realization = outgoing)</small></label>
-            <input type="text" name="realization_amount" class="form-control">
+            <label for="realization_amount">Amount</label>
+            <input type="text" name="realization_amount" value="{{ old('realization_amount', $model->payreq_idr) }}" class="form-control">
           </div>
           <div class="form-group">
             <label for="realization_date">Realization Date <small>(kosong = hari ini)</small></label>
@@ -28,7 +28,7 @@
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Save</button>
+          <button type="submit" class="btn btn-sm btn-primary" form="form-{{ $model->id }}"><i class="fas fa-save"></i> Save</button>
         </div>
       </form>
     </div> <!-- /.modal-content -->
