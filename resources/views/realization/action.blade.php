@@ -18,11 +18,11 @@
             <input type="text" name="realization_num" class="form-control">
           </div>
           <div class="form-group">
-            <label for="realization_amount">Amount</label>
+            <label for="realization_amount">Amount <small>(kosong => realization = outgoing)</small></label>
             <input type="text" name="realization_amount" class="form-control">
           </div>
           <div class="form-group">
-            <label for="realization_date">Realization Date</label>
+            <label for="realization_date">Realization Date <small>(kosong = hari ini)</small></label>
             <input type="date" name="realization_date" class="form-control">
           </div>
         </div>

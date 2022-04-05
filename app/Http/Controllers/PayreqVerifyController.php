@@ -107,11 +107,7 @@ class PayreqVerifyController extends Controller
                     return number_format($payreq->payreq_idr, 0);
                 })
                 ->editColumn('realization_amount', function ($payreq) {
-                    if($payreq->realization_amount) {
-                        return number_format($payreq->realization_amount, 0);
-                    } else {
-                        return number_format($payreq->payreq_idr, 0);
-                    }
+                    if($payreq->realization_amount == null) return '-';
                     return number_format($payreq->realization_amount, 0);
                 })
                 ->addColumn('employee', function ($payreq) {
