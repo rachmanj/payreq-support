@@ -67,6 +67,16 @@ class BucController extends Controller
         return redirect()->route('bucs.index')->with('success', 'BUC updated successfully');
     }
 
+    public function show($id)
+    {
+        $buc = Buc::find($id);
+        $advances = Payreq::where('buc_id', $id)->whereNull('realization_amount')->sum('payreq_idr');
+        $realizations = Payreq::where('buc_id', $id)->whereNotNull('realization_amount')->sum('realization_amount');
+        $total_release = $advances - $realizations;
+
+        return view('bucs.show', compact('buc', 'total_release'));
+    }
+
     public function destroy($id)
     {
         $buc = Buc::find($id);
@@ -106,5 +116,28 @@ class BucController extends Controller
             ->rawColumns(['action'])
             ->toJson();
     }
+
+    public function payreq_data($buc_id)
+    {
+        $payreqs = Payreq::where('buc_id', $buc_id)->orderBy('approve_date', 'asc')->get();
+
+        return datatables()->of($payreqs)
+            ->editColumn('approve_date', function ($payreq) {
+                return date('d-m-Y', strtotime($payreq->approve_date)); 
+            })
+            ->editColumn('employee', function ($payreq) {
+                return $payreq->employee->fullname;
+            })
+            ->editColumn('payreq_idr', function ($payreq) {
+                return number_format($payreq->payreq_idr, 2);
+            })
+            ->editColumn('realization_amount', function ($payreq) {
+                return number_format($payreq->realization_amount, 2);
+            })
+            ->addIndexColumn()
+            ->toJson();
+    }
+
+
 
 }

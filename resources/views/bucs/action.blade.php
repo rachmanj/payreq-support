@@ -1,13 +1,16 @@
 <form action="{{ route('bucs.destroy', $model->id) }}" method="POST">
   @csrf @method('DELETE')
-  <button type="button" class="btn btn-xs btn-info" data-toggle="modal" data-target="#buc-show-{{ $model->id }}">show</button>
+  <a href="{{ route('bucs.show', $model->id) }}" class="btn btn-xs btn-info">show</a>
+  {{-- <button type="button" class="btn btn-xs btn-info" data-toggle="modal" data-target="#buc-show-{{ $model->id }}">show</button> --}}
   @hasanyrole('superadmin|admin_accounting')
   <a href="{{ route('bucs.edit', $model->id) }}" class="btn btn-xs btn-warning">edit</a>
   <button type="submit" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure to delete this record?')">delete</button>
   @endhasanyrole('superadmin|admin_accounting')
 </form>
+
+
 {{-- Modal create --}}
-<div class="modal fade" id="buc-show-{{ $model->id }}">
+{{-- <div class="modal fade" id="buc-show-{{ $model->id }}">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -51,4 +54,4 @@
     
     </div> <!-- /.modal-content -->
   </div> <!-- /.modal-dialog -->
-</div>
+</div> --}}

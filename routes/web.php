@@ -89,6 +89,7 @@ Route::middleware('auth')->prefix('reports')->name('reports.')->group(function (
 
 Route::middleware('auth')->group(function () {
     Route::get('bucs/data', [BucController::class, 'data'])->name('bucs.data');
+    Route::get('bucs/{buc_id}/data', [BucController::class, 'payreq_data'])->name('bucs.payreq_data');
     Route::resource('bucs', BucController::class);
 
     Route::get('account/data', [AccountController::class, 'data'])->name('account.data');
