@@ -72,7 +72,7 @@ class BucController extends Controller
         $buc = Buc::find($id);
         $advances = Payreq::where('buc_id', $id)->whereNull('realization_amount')->sum('payreq_idr');
         $realizations = Payreq::where('buc_id', $id)->whereNotNull('realization_amount')->sum('realization_amount');
-        $total_release = $advances - $realizations;
+        $total_release = $advances + $realizations;
 
         return view('bucs.show', compact('buc', 'total_release'));
     }
@@ -135,7 +135,7 @@ class BucController extends Controller
             //     return number_format($payreq->realization_amount, 2);
             // })
             ->editColumn('amount', function ($payreq) {
-                if($payreq->realization_amount){
+                if($payreq->realization_amount != null){
                     return number_format($payreq->realization_amount, 2);
                 } else {
                     return number_format($payreq->payreq_idr, 2);
