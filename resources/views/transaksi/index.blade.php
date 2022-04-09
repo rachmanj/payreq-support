@@ -34,12 +34,13 @@
           <thead>
           <tr>
             <th>#</th>
-            <th>Date</th>
+            <th>PostingD</th>
             <th>Account</th>
             <th>Type</th>
             <th>Amount</th>
             <th>Desc</th>
             <th>User</th>
+            <th>Created</th>
             <th></th>
           </tr>
           </thead>
@@ -66,12 +67,22 @@
         
         <div class="form-group">
           <label for="account_id">Account</label>
-          <select name="account_id" id="account_id" class="form-control">
+          <select name="account_id" id="account_id" class="form-control @error('account_id') is-invalid @enderror">
             <option value="">-- select account --</option>
             @foreach ($accounts as $account)
               <option value="{{ $account->id }}">{{ $account->account_no . ' - ' . $account->name }}</option>
             @endforeach
           </select>
+          @error('account_id')
+            <div class="invalid-feedback">
+              {{ $message }}
+            </div>
+          @enderror
+        </div>
+
+        <div class="form-group">
+          <label for="posting_date">Posting Date <small>(blank = today)</small></label>
+          <input type="date" name="posting_date" id="posting_date" class="form-control" autocomplete="off">
         </div>
 
         <div class="form-group">
@@ -132,11 +143,12 @@
       ajax: '{{ route('transaksi.data') }}',
       columns: [
         {data: 'DT_RowIndex', orderable: false, searchable: false},
-        {data: 'created_at'},
+        {data: 'posting_date'},
         {data: 'account'},
         {data: 'type'},
         {data: 'amount'},
         {data: 'description'},
+        {data: 'created_at'},
         {data: 'created_by'},
         {data: 'action', orderable: false, searchable: false},
       ],
@@ -147,7 +159,7 @@
                 "className": "text-right"
               },
               {
-                "targets": [3],
+                "targets": [1, 3],
                 "className": "text-center"
               }
             ]

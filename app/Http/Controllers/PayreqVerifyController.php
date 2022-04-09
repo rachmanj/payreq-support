@@ -37,10 +37,11 @@ class PayreqVerifyController extends Controller
             $account->balance = $account->balance + $variant;
             $account->save();
 
-            // create transaksi
+            // create new transaksi record
             $transaksi = new Transaksi();
             $transaksi->payreq_id = $payreq->id;
             $transaksi->account_id = $account->id;
+            $transaksi->posting_date = $verify_date;
             $transaksi->description = $description;
             $transaksi->type = 'plus';
             $transaksi->amount = $variant;

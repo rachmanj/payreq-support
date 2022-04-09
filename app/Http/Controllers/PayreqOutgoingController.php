@@ -33,7 +33,7 @@ class PayreqOutgoingController extends Controller
             if($payreq->buc_id != null) {
                 $account = Account::where('account_no', '111115')->first();
                 $account->balance = $account->balance - $payreq->payreq_idr;
-                $description = 'PR ' . $payreq->payreq_num .', RAB no' . $payreq->buc->rab_no;
+                $description = 'PR ' . $payreq->payreq_num .' (RAB)';
             } else {
                 $account = Account::where('account_no', '111111')->first();
                 $account->balance = $account->balance - $payreq->payreq_idr;
@@ -43,9 +43,11 @@ class PayreqOutgoingController extends Controller
 
         $account->save();
 
+        // Create new Transaksi record
         $transaksi = new Transaksi();
         $transaksi->payreq_id = $payreq->id;
         $transaksi->account_id = $account->id;
+        $transaksi->posting_date = $outgoing_date;
         $transaksi->description = $description;
         $transaksi->type = 'minus';
         $transaksi->amount = $payreq->payreq_idr;
@@ -107,12 +109,15 @@ class PayreqOutgoingController extends Controller
             $description = 'PR ' . $payreq->payreq_num;
         }
 
+        // update account balance on accounts table
         $account->balance = $account->balance - $request->split_amount;
         $account->save();
 
+        // create new transaksi
         $transaksi = new Transaksi();
         $transaksi->payreq_id = $payreq->id;
         $transaksi->account_id = $account->id;
+        $transaksi->posting_date = $split_date;
         $transaksi->description = $description;
         $transaksi->type = 'minus';
         $transaksi->amount = $request->split_amount;
@@ -123,8 +128,9 @@ class PayreqOutgoingController extends Controller
 
     public function auto_update($id)
     {
+        $outgoing_date = date('Y-m-d');
         $payreq = Payreq::findOrFail($id);
-        $payreq->outgoing_date = date('Y-m-d');
+        $payreq->outgoing_date = $outgoing_date;
         
         if($payreq->buc_id != null) {
             $account = Account::where('account_no', '111115')->first();
@@ -135,9 +141,12 @@ class PayreqOutgoingController extends Controller
             $account->balance = $account->balance - $payreq->payreq_idr;
             $description = 'PR ' . $payreq->payreq_num;
         }
+
+        // Create new Transaksi record
         $transaksi = new Transaksi();
         $transaksi->payreq_id = $payreq->id;
         $transaksi->account_id = $account->id;
+        $transaksi->posting_date = $outgoing_date;
         $transaksi->description = $description;
         $transaksi->type = 'minus';
         $transaksi->amount = $payreq->payreq_idr;

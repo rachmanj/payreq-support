@@ -24,8 +24,21 @@ class TransaksiController extends Controller
             'type' => 'required',
         ]);
 
-        Transaksi::create($request->all());
+        //Create new transaksi record
+        $transaksi = new Transaksi();
 
+        if($request->posting_date) {
+            $transaksi->posting_date = $request->posting_date;
+        } else {
+            $transaksi->posting_date = date('Y-m-d');
+        }
+        $transaksi->account_id = $request->account_id;
+        $transaksi->amount = $request->amount;
+        $transaksi->type = $request->type;
+        $transaksi->description = $request->description;
+        $transaksi->save();
+
+        // Update account balance on accounts table
         $account = Account::find($request->account_id);
         if($request->type == 'plus'){
             $account->balance += $request->amount;
@@ -57,11 +70,15 @@ class TransaksiController extends Controller
 
     public function data()
     {
-        $transaksis = Transaksi::with('account')->latest()->get();             
+        $transaksis = Transaksi::with('account')->orderBy('posting_date', 'desc')->latest()->get();             
 
         return datatables()->of($transaksis)
-            ->editColumn('created_at', function(Transaksi $transaksi){
+            ->editColumn('created_at', function($transaksi){
+                // return ($transaksi->created_at)->diffForHumans();
                 return date('d-M-Y H:i:s', strtotime('+8 hours', strtotime($transaksi->created_at)));
+            })
+            ->editColumn('posting_date', function ($transaksi) {
+                return $transaksi->posting_date ? date('d-M-Y', strtotime($transaksi->posting_date)) : '-';
             })
             ->editColumn('type', function ($transaksi) {
                 return $transaksi->type == 'plus' ? '<i class="fas fa-plus"></i>' : '<i class="fas fa-minus"></i>';
