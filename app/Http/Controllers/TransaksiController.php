@@ -74,8 +74,8 @@ class TransaksiController extends Controller
 
         return datatables()->of($transaksis)
             ->editColumn('created_at', function($transaksi){
-                // return ($transaksi->created_at)->diffForHumans();
-                return date('d-M-Y H:i:s', strtotime('+8 hours', strtotime($transaksi->created_at)));
+                return ($transaksi->created_at)->diffForHumans();
+                // return date('d-M-Y H:i:s', strtotime('+8 hours', strtotime($transaksi->created_at)));
             })
             ->editColumn('posting_date', function ($transaksi) {
                 return $transaksi->posting_date ? date('d-M-Y', strtotime($transaksi->posting_date)) : '-';

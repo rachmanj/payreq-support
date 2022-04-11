@@ -64,7 +64,7 @@ class PayreqVerifyController extends Controller
             $transaksi->payreq_id = $payreq->id;
             $transaksi->account_id = $account->id;
             $transaksi->description = $description;
-            $transaksi->type = 'plus';
+            $transaksi->type = 'minus';
             $transaksi->amount = $variant;
             $transaksi->save();
         } 
