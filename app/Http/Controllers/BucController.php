@@ -123,7 +123,7 @@ class BucController extends Controller
     public function payreq_data($buc_id)
     {
         $payreqs = Payreq::where('buc_id', $buc_id)->whereNotNull('outgoing_date')
-                    ->orderBy('approve_date', 'asc')
+                    ->orderBy('approve_date', 'desc')
                     ->get();
 
         return datatables()->of($payreqs)
