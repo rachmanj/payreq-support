@@ -27,7 +27,7 @@
           </div>
         @endif
       </div>
-      <!-- /.card-header -->
+      <!-- card-header -->
       <div class="card-body">
         <table id="payreqs" class="table table-bordered table-striped">
           <thead>
@@ -37,7 +37,7 @@
             <th>Payreq No</th>
             <th>Apprv Date</th>
             <th>Outgoing Date</th>
-            <th>IDR</th>\
+            <th>IDR</th>
             <th>Days</th>
             <th></th>
           </tr>
