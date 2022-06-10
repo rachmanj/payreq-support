@@ -9,6 +9,8 @@ class Buc extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function payreqs()
     {
         return $this->hasMany(Payreq::class, 'buc_id', 'id');
