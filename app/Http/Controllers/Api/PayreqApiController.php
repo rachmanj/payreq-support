@@ -3,89 +3,92 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Buc;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Payreq;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
-class BucApiController extends Controller
+class PayreqApiController extends Controller
 {
     public function index()
     {
-        $bucs = Buc::paginate(10);
+        $payreqs = Payreq::paginate(10);
 
-        return response()->json($bucs);
+        return response()->json([
+            'status' => 'success',
+            'data' => $payreqs
+        ]);
     }
 
     public function search(Request $request)
     {
-        $bucs = Buc::query();
+        $payreqs = Payreq::query();
         $q = $request->query('q');
         if ($q) {
-            $bucs->where('rab_no', 'like', '%' . strtolower($q) . '%');
+            $payreqs->where('rab_no', 'like', '%' . strtolower($q) . '%');
         }
-        $bucs = $bucs->paginate(10);
+        $payreqs = $payreqs->paginate(10);
         
-        // $bucs = Buc::where('rab_no', 'like', '%' . strtolower($q) . '%')->paginate(10);
-
         return response()->json([
             'status' => 'success',
-            'data' => $bucs
+            'data' => $payreqs
         ]);
     }
 
     public function store(Request $request)
     {
         $rules = [
-            'rab_no' => 'required|unique:bucs',
-            'date' => 'required',
-            'description' => 'required|string',
-            'project_code' => 'required|string',
-            'budget' => 'required',
+            'payreq_num' => 'required|unique:payreqs',
+            'employee_id' => 'required',
+            'payreq_type' => 'required',
+            'payreq_idr' => 'required|integer',
+            'approve_date' => 'required',
+            'que_group' => 'required',
         ];
 
         $data = $request->all();
 
-        $validated = Validator::make($data, $rules);
+        $validator = Validator::make($data, $rules);
 
-        if ($validated->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => $validated->errors()
+                'message' => $validator->errors()
             ], 400);
         }
 
-        $buc = Buc::create($data);
+        $payreq = Payreq::create($data);
 
         return response()->json([
             'status' => 'success',
-            'data' => $buc
+            'data' => $payreq
         ]);
     }
 
     public function show($id)
     {
-        $buc = Buc::find($id);
+        $payreq = Payreq::find($id);
 
-        if(!$buc) {
+        if(!$payreq) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'BUC not found' 
+                'message' => 'Payment Request not found' 
             ]);
         }
 
         return response()->json([
             'status' => 'success',
-            'data' => $buc
+            'data' => $payreq
         ]);
     }
 
     public function update(Request $request, $id)
     {
         $rules = [
-            'rab_no' => 'string',
-            'description' => 'string',
-            'project_code' => 'string',
-            'budget' => 'integer',
+            'payreq_num' => 'string',
+            'employee_id' => 'string',
+            'payreq_type' => 'string',
+            'payreq_idr' => 'integer',
+            'approve_date' => 'string',
         ];
 
         $data = $request->all();
@@ -102,46 +105,46 @@ class BucApiController extends Controller
         //cek project_code ada ga
         //menyusul
 
-        if ($request->has('rab_no')) {
-            $rab_no = Buc::where('rab_no', $request->rab_no)->first();
-            if ($rab_no) {
+        if ($request->has('payreq_num')) {
+            $payreq_num = Payreq::where('payreq_num', $request->payreq_num)->first();
+            if ($payreq_num) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'RAB No already exists'
+                    'message' => 'Payment Request already exists'
                 ], 400);
             }
         }
 
         //cek BUC ada ga
-        $buc = Buc::find($id);
-        if (!$buc) {
+        $payreq = Payreq::find($id);
+        if (!$payreq) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'BUC not found'
+                'message' => 'Payment Request not found'
             ]);
         }
 
-        $buc->update($data);
+        $payreq->update($data);
 
         return response()->json([
             'status' => 'success',
-            'data' => $buc
+            'data' => $payreq
         ]);
     }
 
     public function destroy($id)
     {
-        $buc = Buc::find($id);
-        if (!$buc) {
+        $payreq = Payreq::find($id);
+        if (!$payreq) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'BUC not found'
+                'message' => 'Payment Request not found'
             ]);
         }
-        $buc->delete();
+        $payreq->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'BUC deleted'
+            'message' => 'Payment Request deleted'
         ]);
     }
 }
