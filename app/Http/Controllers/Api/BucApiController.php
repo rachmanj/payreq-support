@@ -9,11 +9,21 @@ use Illuminate\Http\Request;
 
 class BucApiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bucs = Buc::paginate(10);
+        $bucs = Buc::query();
 
-        return response()->json($bucs);
+        $q = $request->query('q');
+
+        $bucs->when($q, function ($query, $q) {
+            return $query->whereRaw("rab_no LIKE '%".strtolower($q)."%'");
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $bucs->paginate(10),
+        ]);
+
     }
 
     public function search(Request $request)
@@ -24,8 +34,6 @@ class BucApiController extends Controller
             $bucs->where('rab_no', 'like', '%' . strtolower($q) . '%');
         }
         $bucs = $bucs->paginate(10);
-        
-        // $bucs = Buc::where('rab_no', 'like', '%' . strtolower($q) . '%')->paginate(10);
 
         return response()->json([
             'status' => 'success',
