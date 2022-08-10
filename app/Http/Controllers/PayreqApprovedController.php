@@ -45,6 +45,7 @@ class PayreqApprovedController extends Controller
         $payreq->payreq_idr = $request->payreq_idr;
         $request->buc_id ? $payreq->buc_id = $request->buc_id : $payreq->buc_id = null;
         $payreq->remarks = $request->remarks;
+        $payreq->created_by = auth()->user()->username;
         $payreq->save();
 
         return redirect()->route('approved.index')->with('success', 'Payment Request created');
@@ -78,6 +79,7 @@ class PayreqApprovedController extends Controller
         $payreq->payreq_idr = $request->payreq_idr;
         $payreq->remarks = $request->remarks;
         $request->buc_id ? $payreq->buc_id = $request->buc_id : $payreq->buc_id = null;
+        $payreq->updated_by = auth()->user()->username;
         $payreq->save();
 
         return redirect()->route('approved.index')->with('success', 'Payment Request updated');

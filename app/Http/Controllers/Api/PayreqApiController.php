@@ -37,13 +37,31 @@ class PayreqApiController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'payreq_num' => 'required|unique:payreqs',
+            'payreq_num' => 'required',
             'employee_id' => 'required',
             'payreq_type' => 'required',
             'payreq_idr' => 'required|integer',
             'approve_date' => 'required',
             'que_group' => 'required',
         ];
+
+        // cek payreq_num
+        $cek_payreq_num = Payreq::where('payreq_num', $request->payreq_num)->first();
+        if ($cek_payreq_num) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Payreq Number already exist'
+            ]);
+        }
+
+        // cek employee_id
+        $cek_employee_id = Payreq::where('employee_id', $request->employee_id)->first();
+        if (!$cek_employee_id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Employee ID Not Found'
+            ]);
+        }
 
         $data = $request->all();
 
@@ -56,7 +74,9 @@ class PayreqApiController extends Controller
             ], 400);
         }
 
-        $payreq = Payreq::create($data);
+        $payreq = Payreq::create(array_merge($data, [
+            'created_by' => 'superadmin'
+        ]));
 
         return response()->json([
             'status' => 'success',
@@ -84,8 +104,7 @@ class PayreqApiController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'payreq_num' => 'string',
-            'employee_id' => 'string',
+            'employee_id' => 'integer',
             'payreq_type' => 'string',
             'payreq_idr' => 'integer',
             'approve_date' => 'string',
@@ -105,17 +124,6 @@ class PayreqApiController extends Controller
         //cek project_code ada ga
         //menyusul
 
-        if ($request->has('payreq_num')) {
-            $payreq_num = Payreq::where('payreq_num', $request->payreq_num)->first();
-            if ($payreq_num) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Payment Request already exists'
-                ], 400);
-            }
-        }
-
-        //cek BUC ada ga
         $payreq = Payreq::find($id);
         if (!$payreq) {
             return response()->json([
@@ -124,11 +132,23 @@ class PayreqApiController extends Controller
             ]);
         }
 
+        //cek employee_id
+        if ($request->has('employee_id')) {
+            $cek_employee_id = Payreq::where('employee_id', $request->employee_id)->first();
+            if (!$cek_employee_id) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Employee Not Found'
+                ], 400);
+            }
+        }
+
         $payreq->update($data);
+        $updated_payreq = Payreq::find($id);    
 
         return response()->json([
             'status' => 'success',
-            'data' => $payreq
+            'data' => $updated_payreq
         ]);
     }
 
