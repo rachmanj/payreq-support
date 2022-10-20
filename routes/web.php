@@ -81,19 +81,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/report1/display', [ReportController::class, 'report1_display'])->name('report1.display');
     });
 
-    Route::group(function () {
-        Route::get('approved/data', [PayreqApprovedController::class, 'data'])->name('approved.data');
-        Route::resource('approved', PayreqApprovedController::class);
+    Route::get('approved/data', [PayreqApprovedController::class, 'data'])->name('approved.data');
+    Route::resource('approved', PayreqApprovedController::class);
 
-        Route::get('bucs/data', [BucController::class, 'data'])->name('bucs.data');
-        Route::get('bucs/{buc_id}/data', [BucController::class, 'payreq_data'])->name('bucs.payreq_data');
-        Route::resource('bucs', BucController::class);
+    Route::get('bucs/data', [BucController::class, 'data'])->name('bucs.data');
+    Route::get('bucs/{buc_id}/data', [BucController::class, 'payreq_data'])->name('bucs.payreq_data');
+    Route::resource('bucs', BucController::class);
 
-        Route::get('account/data', [AccountController::class, 'data'])->name('account.data');
-        Route::post('account/transaksi-store', [AccountController::class, 'transaksi_store'])->name('account.transaksi_store');
-        Route::resource('account', AccountController::class);
+    Route::get('account/data', [AccountController::class, 'data'])->name('account.data');
+    Route::post('account/transaksi-store', [AccountController::class, 'transaksi_store'])->name('account.transaksi_store');
+    Route::resource('account', AccountController::class);
 
-        Route::get('transaksi/data', [TransaksiController::class, 'data'])->name('transaksi.data');
-        Route::resource('transaksi', TransaksiController::class);
-    });
+    Route::get('transaksi/data', [TransaksiController::class, 'data'])->name('transaksi.data');
+    Route::resource('transaksi', TransaksiController::class);
 });
