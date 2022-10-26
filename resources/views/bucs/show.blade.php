@@ -19,7 +19,7 @@
           <div class="card-body">
             <dl class="row">
               <dt class="col-sm-4">RAB No</dt>
-              <dd class="col-sm-8">: {{ $buc->rab_no }}</b></dd>
+              <dd class="col-sm-8">: {{ $buc->rab_no }}</b> @if ($buc->filename) <a href="{{ asset('document_upload/') . '/'. $buc->filename }}" class='btn btn-xs btn-success' target=_blank>Show RAB</a> @endif</dd>
               <dt class="col-sm-4">Date</dt>
               <dd class="col-sm-8">: {{ date('d-M-Y', strtotime($buc->date)) }}</dd>
               <dt class="col-sm-4">Description</dt>
@@ -29,7 +29,7 @@
               <dt class="col-sm-4">Budget</dt>
               <dd class="col-sm-8">: Rp.{{ number_format($buc->budget, 2) }}</dd>
               <dt class="col-sm-4">Release to Date</dt>
-              <dd class="col-sm-8">: Rp.{{ number_format($total_release, 2) }}</dd>
+              <dd class="col-sm-8">: Rp.{{ number_format($total_release, 2) }} ({{ number_format($total_release / $buc->budget * 100, 2) }}%)</dd>
             </dl>
           </div>
           <div class="card-body">

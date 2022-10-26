@@ -62,7 +62,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="{{ route('bucs.store') }}" method="POST">
+      <form action="{{ route('bucs.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
       <div class="modal-body">
 
@@ -115,6 +115,16 @@
           <label for="budget">Budget</label>
           <input type="text" name="budget" id="budget" class="form-control @error('budget') is-invalid @enderror">
           @error('budget')
+            <div class="invalid-feedback">
+              {{ $message }}
+            </div>
+          @enderror
+        </div>
+
+        <div class="form-group">
+          <label for="file_upload">Upload RAB</label>
+          <input type="file" name="file_upload" id="file_upload" class="form-control @error('file_upload') is-invalid @enderror">
+          @error('file_upload')
             <div class="invalid-feedback">
               {{ $message }}
             </div>

@@ -25,12 +25,20 @@ class BucController extends Controller
             'budget' => 'required',
         ]);
 
+        $file = $request->file('file_upload');
+
+        $filename = rand() . '_' . $file->getClientOriginalName();
+        
+
+        $file->move(public_path('document_upload'), $filename);
+
         $buc = new Buc();
         $buc->rab_no = $request->rab_no;
         $buc->date = $request->date;
         $buc->description = $request->description;
         $buc->project_code = $request->project_code;
         $buc->budget = $request->budget;
+        $buc->filename = $filename;
         $buc->status = 'progress';
         $buc->save();
 
@@ -55,6 +63,7 @@ class BucController extends Controller
             'budget' => 'required',
         ]);
 
+        
         $buc = Buc::find($id);
         $buc->rab_no = $request->rab_no;
         $buc->date = $request->date;
@@ -62,6 +71,14 @@ class BucController extends Controller
         $buc->project_code = $request->project_code;
         $buc->budget = $request->budget;
         $buc->status = $request->status;
+
+        if ($request->file_upload) {
+            $file = $request->file('file_upload');
+            $filename = rand() . '-' . $file->getClientOriginalName();
+            $file->move(public_path('document_upload'), $filename);
+            $buc->filename = $filename;
+        }
+
         $buc->save();
 
         return redirect()->route('bucs.index')->with('success', 'BUC updated successfully');
